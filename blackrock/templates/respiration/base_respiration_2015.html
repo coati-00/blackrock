@@ -1,0 +1,72 @@
+{% extends "base.html" %} 
+{% load render %}
+{% block title %}Tree Respiration{% endblock %}
+
+  {% block css %} 
+    <style type='text/css'>
+      @import "/respiration/media/css/style.css";
+    </style> 
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+  {% endblock %} 
+
+  {% block js %} 
+    <!-- Keeping new javascript within the module so it does not interfere with styles and JS in other modules -->
+    <script type="text/javascript" src="/respiration/js/libraries/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="/respiration/js/libraries/underscore-1.8.2.js"></script>
+    <script type="text/javascript" src="/respiration/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/respiration/js/libraries/backbone-1.1.2.js"></script>
+    <script type="text/javascript" src="/respiration/js/libraries/require-2.1.16.js"></script>
+    <script type="text/javascript" src="/respiration/js/libraries/Highcharts-4.1.4/js/highcharts.js"></script>
+    <script type="text/javascript" src="/respiration/js/libraries/Highcharts-4.1.4/js/modules/exporting.js"></script>
+    <script type="text/javascript" src="/respiration/js/canopy.js"></script>
+    <script type="text/javascript" src="/respiration/media/js/jquery.sharing/jquery.sharing.js"></script>
+    <script type="text/javascript" src="/respiration/media/js/sharing.js"></script>
+  {% endblock %} 
+
+  {% block masthead %} 
+    <a href="/respiration/" title="Return to 'Tree Respiration' home">Tree Respiration</a>
+  {% endblock %} 
+
+  {% block content %}
+    {% include "respiration/sharing.html" %}
+  
+      <ul class="nav nav-tabs tree-graph-nav"><!-- id="tab-bar" -->
+        <li class="active"><a href="#leaf-graph-pane" data-toggle="tab">Leaf Level</a></li><!-- class="tab" id="tab-leaf" -->
+        <li><a href="#canopy-graph-pane" data-toggle="tab">Canopy Level</a></li><!-- class="tab" id="tab-canopy" -->
+        <li><a href="#teaching-resources-pane" data-toggle="tab">Teaching Resources</a></li><!-- class="tab" id="tab-resources" -->
+      </ul>
+ 
+      <div class="tree-graph tab-content">
+         {% include "respiration/sharing.html" %} 
+           {% block moduleheader %}
+             <div id="respiration_content">
+        	   <div id="instructions">
+        		 <strong>Instructions:</strong>
+        		 {% block instructions %}
+        		 {% endblock %}
+        	   </div>
+    		   {% include "respiration/arrhenius_function.html" %}
+             </div> <!-- end respiration content -->
+           {% endblock %} 
+           {% block modulecontainer %}
+             {% include "respiration/module_container.html" %}
+           {% endblock %}
+           
+        <div class="tab-pane active" id="leaf-graph-pane">
+          {% include "respiration/leaf_respiration_pane.html" %}
+        </div>
+        <div class="tab-pane" id="canopy-graph-pane">
+          {% include "respiration/canopy_pane.html" %}
+        </div>
+        <div class="tab-pane" id="teaching-resources-pane">
+          {% include "/respiration/resources.html" %} 
+        </div>
+      </div><!-- End Tab Content Div -->
+
+    
+ 
+    
+{% endblock %}
+

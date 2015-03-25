@@ -1,0 +1,30 @@
+<div id="container">
+  <div id="left">
+    <div id="leftfield">
+      {% block leftlegend %}
+        LEFT LEGEND
+      {% endblock %}
+
+      {% block left %} 
+        LEFT PANE 
+   	  {% endblock %} 
+   </div>
+  </div>
+    
+  <div id="right">
+    <div id="rightfield">
+      <h3>
+        {% block rightlegend %}
+          RIGHT LEGEND
+        {% endblock %}
+      </h3>
+      {% block graph %} 
+  	    <div id="graph-cursor"><div id="unfreeze"></div></div>
+    	<canvas id="graph" width="460" height="345"></canvas>
+      {% endblock %} 
+      {% block right %} 
+    	RIGHT PANE
+      {% endblock %} 
+    </div>
+  </div>        
+</div> <!-- end div "container" -->    
