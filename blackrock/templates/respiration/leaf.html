@@ -6,44 +6,6 @@
 {% block js %}
   {{ block.super }}
 
-   <script type="text/javascript" src="/site_media/js/mochikit/MochiKit/DragAndDrop.js"></script>
-   <script type="text/javascript" src="media/js/species.js"></script>
-
-   <script type="text/javascript">
-
-
-  function calculateKelvin(elem, id) {
-     var temperature = elem;
-     var k = id.split("-");
-
-             var kl = k[0] + "-kelvin";
-             var result = parseFloat(elem) + 273.15;
-             var kelvin = document.getElementById(kl);
-             if(isNaN(result)) {
-                     kelvin.innerHTML = "";
-                 }
-             else {
-                      kelvin.innerHTML = result;
-                 }
-          }
-
-        function formSubmit() {
-           $("specieslist").value = getSpeciesList().join();
-
-       $("leaf-form").submit();
-     }
-
-     function initNav() {
-       connect("tab-canopy", "onclick", formSubmit);
-     }
-     addLoadEvent(initNav);
-
-     addLoadEvent(function() {
-         initNav();
-         initSpeciesModule();
-         setup();
-       });
-   </script>
  {% endblock %}
 
  {% block instructions %}
