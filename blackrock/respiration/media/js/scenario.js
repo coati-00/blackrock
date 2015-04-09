@@ -6,7 +6,7 @@
 
    function initScenarioCloner() {
       html = $('scenario1').innerHTML;
-      updateColors();
+      updateForestColors();
    }
 
    function addScenario() {
@@ -32,7 +32,7 @@
            connect(elem, "onclick", toggle);
     });
     initYearHelper();
-    updateColors();
+    updateForestColors();
    }
    
    function delScenario(id) {

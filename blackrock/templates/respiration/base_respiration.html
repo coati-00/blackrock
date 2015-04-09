@@ -1,6 +1,6 @@
 {% extends "base.html" %} 
 {% load render %}
-
+{% load extras %}
 {% block title %}Tree Respiration{% endblock %}
 
 {% block css %} 
@@ -15,6 +15,8 @@
 {% endblock %} 
 
 {% block js %} 
+    {% include "respiration/leaf_templates.html" %}
+    {% include "respiration/forest_templates.html" %}
     <script src="/site_media/js/browserdetect.js" type="text/javascript" language="javascript"></script>
     <script src="/site_media/js/shield.js" type="text/javascript" language="javascript"></script>
     <script type="text/javascript" src="/site_media/js/libraries/jquery-1.11.2.min.js"></script>
@@ -27,59 +29,37 @@
     <script type="text/javascript" src="/site_media/js/bluff/excanvas.js"></script> 
     <script type="text/javascript" src="/site_media/js/bluff/bluff-src.js"></script>
     <script type="text/javascript" src="/respiration/media/js/graph.js"></script> 
+    <script type="text/javascript" src="/site_media/js/respiration/tabswitch.js"></script>
+    <script type="text/javascript" src="/site_media/js/mochikit/MochiKit/DragAndDrop.js"></script>
+    <script type="text/javascript" src="media/js/species.js"></script>
+    <script type="text/javascript" src="media/js/scenario.js"></script>
+    <script type="text/javascript" src="media/js/foresthelpers.js"></script>
+    <script type="text/javascript" src="media/js/forestgraph.js"></script>
 
-    <script type="text/javascript">
-      function closePredefinedSpecies() {
-          var elts = getElementsByTagAndClassName("div", "species-predefined-list");
-          forEach(elts, function(elt) {
-              if (getStyle(elt, 'display') === 'block') {
-                  hideElement(elt);
-              }
-          });
-      }
 
-      function setActiveTab() {
-          var tabname = "{% block tabname %}tab-leaf{% endblock %}";
-          if (document.getElementById(tabname) != null) { 
-              addElementClass(tabname, "tab-selected");
-          }
-          connect(document.body, "onclick", closePredefinedSpecies);    
-      }
-
-      addLoadEvent(setActiveTab);      
-      
-    </script>
-    
-    
-    <script type="text/javascript">
-      function initNav() {
-          connect("tab-leaf", "onclick", function() {
-              window.location = '/respiration/leaf';
-          });
-          connect("tab-canopy", "onclick", function() {
-              window.location = '/respiration/forest';
-          });
-       }
-       addLoadEvent(initNav);
-    </script>
-    <script type="text/javascript">
-      function showResources() {
-    	  /* this is ugly but want to get everything
-    	  on one page before doing complete cleanup and adding things like bootstrap */
-    	  console.log("showresources");
-    	  //get whatever tab is currently active, remove active class, make resource tab active
-    	  jQuery('#tab-leaf').removeClass('active');
-    	  jQuery('#tab-canopy').removeClass('active');
-    	  jQuery('#tab-leaf').removeClass('tab-selected');
-    	  jQuery('#tab-canopy').removeClass('tab-selected');
-    	  jQuery('#tab-resources').addClass('active');
-    	  jQuery('#tab-resources').addClass('tab-selected');
-    	  //empty the module header
-    	  jQuery('#respiration_content').html("");
-    	  //replace the current content with the resources content
-    	  jQuery('#container').html(jQuery('#resources-template').html());
-      }
-    </script>
+   <script type="text/javascript">
+   // function closePredefinedSpecies() {
+   //     var elts = getElementsByTagAndClassName("div", "species-predefined-list");
+   //     forEach(elts, function(elt) {
+   //         if (getStyle(elt, 'display') === 'block') {
+   //             hideElement(elt);
+   //         }
+   //     });
+   //    }
+     //connect(document.body, "onclick", closePredefinedSpecies); 
+     //on("mouseover", "div.species-select-predefined", function() {})
+     //jQuery(document.body).on("mouseout", "div.species-predefined-choice", 
+    	//	 function() {closePredefinedSpecies();});
+     //("click", "div.closePredefinedSpecies", function() {closePredefinedSpecies()});
+     addLoadEvent(function() {
+         initNav();
+         initSpeciesModule();
+         initScenarioModule();
+         setup();
+         //initForestGraph();
+       });
+     console.log(window);
+   </script>
     <script type="text/template" id="resources-template">
   <div id="resource-contents">
     <h3>Teaching Resources</h3>
@@ -102,6 +82,45 @@
     </ul>
   </div>
 </script>
+
+
+    <script type="text/javascript">
+
+
+    function calculateKelvin(elem, id) {
+        var k = id.split("-");
+        var kl = k[0] + "-kelvin";
+        var result = parseFloat(elem) + 273.15;
+        var kelvin = document.getElementById(kl);
+        if (isNaN(result)) {
+            kelvin.innerHTML = "";
+        }
+        else {
+            kelvin.innerHTML = result;
+        }
+    }
+
+//     addLoadEvent(function() {
+// //         {% for station in stations %}
+// //             addYears("{{station}}", {{years|hash:station}});
+// //         {% endfor %}
+//         //initNav(); // foresthelpers.js
+//         //initYearHelper(); // foresthelpers.js
+//         initSpeciesModule(); // species.js
+//         initScenarioModule(); // scenario.js
+//         setup(); // graph.js        
+//       });
+
+//     makeExportLink = function(a) {
+//       var id = a.id;
+//       id = id.split('-')[0];
+//       var year = document.getElementById(id+'-year').value;
+//       var start = document.getElementById(id+'-startdate').value;
+//       var end = document.getElementById(id+'-enddate').value;
+//       var station = document.getElementById(id+'-fieldstation').value;
+//       a.href = "/respiration/getcsv?year="+year+"&start="+start+"&end="+end+"&station="+station;
+//     };    
+  </script>
 {% endblock %} 
 
 {% block masthead %} 
@@ -114,7 +133,6 @@
 {% block content %}
     {% include "respiration/sharing.html" %}
         <div id="tab-bar">
-
             <div class="tab" id="tab-resources" onclick="showResources();">
                 Teaching Resources
             </div>
@@ -133,6 +151,7 @@
 	        	{% block instructions %}
 	        	{% endblock %}
 	       	</div>
+	       	<div id="resource-area"></div>
 	    	{% include "respiration/arrhenius_function.html" %}
 	    </div> <!-- end respiration content -->
     {% endblock %}  
@@ -142,31 +161,26 @@
     	<div id="left">
     		<div id="leftfield">
                
-               {% block leftlegend %}
-                  LEFT LEGEND
-               {% endblock %}
+               <div id="left-legend">
+               </div>
                
-    		
-    		   {% block left %} 
-    		      LEFT PANE 
-    		   {% endblock %} 
+    		   <div id="left-pane">
+    		   </div>
     		</div>
     	</div>
     
     	<div id="right">
     	  <div id="rightfield">
             <h3>
-                {% block rightlegend %}
-        	    RIGHT LEGEND
-        	    {% endblock %}
+                <div id="right-legend">
+        	    </div>
             </h3>
     	    {% block graph %} 
     		  <div id="graph-cursor"><div id="unfreeze"></div></div>
     		  <canvas id="graph" width="460" height="345"></canvas>
     	    {% endblock %} 
-    	    {% block right %} 
-    		    RIGHT PANE
-    	    {% endblock %} 
+    	    <div id="right-pane">
+    	    </div>
     	  </div>
     	</div>
         {% endblock %}

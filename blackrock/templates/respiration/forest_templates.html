@@ -1,81 +1,23 @@
-{% extends "respiration/base_respiration.html" %}
-{% load extras %}
-{% block tabname %}tab-canopy{% endblock %}
-
-{% block jsforest %}
-    <script type="text/javascript" src="media/js/foresthelpers.js"></script> 
-    <script type="text/javascript" src="media/js/scenario.js"></script> 
-    <script type="text/javascript" src="media/js/species.js"></script> 
-    <script type="text/javascript" src="media/js/forestgraph.js"></script>
-
-    <script type="text/javascript">
-
-
-    function calculateKelvin(elem, id) {
-        var k = id.split("-");
-        var kl = k[0] + "-kelvin";
-        var result = parseFloat(elem) + 273.15;
-        var kelvin = document.getElementById(kl);
-        if (isNaN(result)) {
-            kelvin.innerHTML = "";
-        }
-        else {
-            kelvin.innerHTML = result;
-        }
-    }
-
-    addLoadEvent(function() {
-        {% for station in stations %}
-            addYears("{{station}}", {{years|hash:station}});
-        {% endfor %}
-        initNav(); // foresthelpers.js
-        initYearHelper(); // foresthelpers.js
-        initSpeciesModule(); // species.js
-        initScenarioModule(); // scenario.js
-        setup(); // graph.js        
-      });
-
-    makeExportLink = function(a) {
-      var id = a.id;
-      id = id.split('-')[0];
-      var year = document.getElementById(id+'-year').value;
-      var start = document.getElementById(id+'-startdate').value;
-      var end = document.getElementById(id+'-enddate').value;
-      var station = document.getElementById(id+'-fieldstation').value;
-      a.href = "/respiration/getcsv?year="+year+"&start="+start+"&end="+end+"&station="+station;
-    };    
-  </script>
-
-{% endblock %}
-
-{% block instructions %}
+<script type="text/template" id="canopy-instructions-template">
   Explore how climate fluctuations and changes in species composition affect the respiration output of a forest using actual temperature data from Black Rock Forest. Enter the following scenario parameters into the fields below. Click on the Graph button to determine and view the total amount (moles) of carbon respired from a m<sup>2</sup> of forest for each of your scenarios. 
   <br /><br />
   Advanced options include a forest leaf area index that takes into consideration the canopy layers of the forest as well as a delta function that modifies the temperature data points across the board.
-{% endblock %}
-
-{% block leftlegend %}
+</script>
+<script type="text/template" id="canopy-left-legend-template">
     <div id="forestgraph">
       <input id="graph_button" type="button" value="Graph &gt;&gt;" onclick="javascript:forestGraph();" />
       <input id="print_button" type="button" value="Print" onclick="javascript:window.print()" />      
     </div>
     <h3>Set Scenario Variables</h3>
-{% endblock %}
-
-{% block left %}
+</script>
 
 
 
+ <script type="text/template" id="canopy-left-pane-template">
 <div id="error">Some errors occurred while graphing.  You might want to double-check the boxes highlighted in red.</div>
 
 <form id="leaf-form" name="leaf-form" action="leaf" method="post">
-  <input type="hidden" name="leaf-numspecies" id="leaf-numspecies" class="leafdata" value="{{ numspecies }}" />
-  {% for species in specieslist %}
-    <input type="hidden" name="leaf-species{{forloop.counter}}-name" id="leaf-species{{forloop.counter}}-name" value='{{species|hash:"name"}}' />
-    <input type="hidden" name="leaf-species{{forloop.counter}}-base-temp" id="leaf-species{{forloop.counter}}-base-temp" value='{{species|hash:"basetemp"}}' />
-    <input type="hidden" name="leaf-species{{forloop.counter}}-E0" id="leaf-species{{forloop.counter}}-E0" value='{{species|hash:"E0"}}' />
-    <input type="hidden" name="leaf-species{{forloop.counter}}-R0" id="leaf-species{{forloop.counter}}-R0" value='{{species|hash:"R0"}}' />
-  {% endfor %}
+
 </form>
 
 <div id="scenariocontainer">
@@ -96,8 +38,7 @@
 	      <div class="colorswatch" id="scenario1-swatch">
 	        &nbsp;&nbsp;&nbsp;&nbsp;
 	      </div>
-	      <input type="text" class="scenario-name" id="scenario1-name" name="scenario1-name" value='{{ scenario_options|hash:"name"}} ' />
-	    </div>
+	      	    </div>
 
 	    <div class="speciesbox togglecontainer">
 	      <div class="speciesheader">	    <span class="button addbutton" onclick="addSpecies(this);">	      + Add Species 	    </span>
@@ -173,29 +114,23 @@
 		        <td>  Forest Leaf Area Index =
 		        </td>
 		        <td>
-		          <input type="text" id="scenario1-leafarea" name="scenario1-leafarea" size="5" value='{{ scenario_options|hash:"leafarea"}}'/>
+		          <input type="text" id="scenario1-leafarea" name="scenario1-leafarea" size="5" value=''/>
 		        </td>
 	          </tr>
 	          <tr>
 		        <td>
 		          Field Station:
-		          {% with scenario_options|hash:"fieldstation" as selectedstation %}
 		          <select id="scenario1-fieldstation" name="scenario1-fieldstation" class="fieldstation-select">
-		          {% for station in stations %}
   		          <option value="{{ station }}"
-			      {% ifequal station selectedstation %}
 			      selected
-			      {% endifequal %}
 			      >{{station}}
 		          </option>
-		          {% endfor %}
-		          {% endwith %}
 		          </select>
 		        </td>
 		        <td>
    		          Year:
 		          <select id="scenario1-year" name="scenario1-year">
-		            <option value='{{ scenario_options|hash:"year"}}' selected />
+		            <option value='' selected />
 		          </select>
 		        </td>
 	          </tr>
@@ -204,7 +139,7 @@
 		          Season Start (mm/dd):
 		        </td>
 		        <td>
-		          <input type="text" id="scenario1-startdate" name="scenario1-startdate" size="5" value='{{ scenario_options|hash:"startdate"}}' />
+		          <input type="text" id="scenario1-startdate" name="scenario1-startdate" size="5" value='' />
 		        </td>
 	          </tr>
 	          <tr>
@@ -212,7 +147,7 @@
 		          Season End (mm/dd):
 		        </td>
 		        <td>
-		          <input type="text" id="scenario1-enddate" name="scenario1-enddate" size="5" value='{{ scenario_options|hash:"enddate"}}' />
+		          <input type="text" id="scenario1-enddate" name="scenario1-enddate" size="5" value='' />
 		        </td>
 	          </tr>
 	          <tr>
@@ -231,7 +166,7 @@
 		          <a href="#" class="tooltip">&Delta;T<sub>a</sub>=<span>Increase or decrease temperature data points by this amount.</span></a>
 		        </td>
 		        <td>
-		          <input type="text" id="scenario1-delta-t" name="scenario1-delta-t" size='5' value='{{ scenario_options|hash:"deltat"}}' />&deg;C
+		          <input type="text" id="scenario1-delta-t" name="scenario1-delta-t" size='5' value='' />&deg;C
 		        </td>
 	          </tr>
 	        </table>
@@ -244,13 +179,13 @@
   <!-- end div "scenariobox" -->
 </div>
 <!-- end div "scenariocontainer" -->
+</script>
 
-{% endblock %}
-
-{% block rightlegend %}
+ <script type="text/template" id="canopy-right-legend-template">
 Scenario Graph
-{% endblock %}
+ </script>
 
-{% block right %}
+
+<script type="text/template" id="canopy-right-legend-template">
 <div id="y-grid-canopy"></div>
-{% endblock %}
+</script>

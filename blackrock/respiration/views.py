@@ -7,7 +7,8 @@ from django.core.cache import cache
 from django.db import connection, transaction
 from django.http import HttpResponse, HttpResponseRedirect, \
     HttpResponseForbidden
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response,render
+
 from django.template import RequestContext
 from json import dumps
 from django.utils.tzinfo import FixedOffset
@@ -26,47 +27,51 @@ def index(request, admin_msg=""):
 
 
 def leaf(request):
-    scenario_options = {
-        'name': 'Scenario 1',
-        'leafarea': 1,
-        'startdate': '1/1',
-        'enddate': '12/31',
-        'deltat': '',
-        'fieldstation': '',
-        'year': ''}
-    try:
-        scenario_options['name'] = request.POST['scenario1-name']
-        scenario_options['year'] = request.POST['scenario1-year']
-        scenario_options['fieldstation'] = request.POST[
-            'scenario1-fieldstation']
-        scenario_options['leafarea'] = request.POST['scenario1-leafarea']
-        scenario_options['startdate'] = request.POST['scenario1-startdate']
-        scenario_options['enddate'] = request.POST['scenario1-enddate']
-        scenario_options['deltat'] = request.POST['scenario1-delta-t']
-    except:
-        pass
-
-    specieslist = []
-    try:
-        specieslist = request.POST['scenario1-species'].split(",")
-    except:
-        pass
-
-    myspecies = []
-    for s in specieslist:
-        if(s != ""):
-            species = {}
-            species['name'] = request.POST[s + '-name']
-            species['basetemp'] = request.POST[s + '-base-temp']
-            species['E0'] = request.POST[s + '-E0']
-            species['R0'] = request.POST[s + '-R0']
-            species['percent'] = request.POST[s + '-percent']
-            myspecies.append(species)
-
-    return render_to_response(
-        'respiration/leaf.html', {'numspecies': len(myspecies),
-                                  'specieslist': myspecies,
-                                  'scenario_options': scenario_options})
+    if request.method == 'GET':
+        #return render_to_response('respiration/base_respiration.html')
+        return render(request, 'respiration/base_respiration.html')
+    if request.method == 'POST':
+        scenario_options = {
+            'name': 'Scenario 1',
+            'leafarea': 1,
+            'startdate': '1/1',
+            'enddate': '12/31',
+            'deltat': '',
+            'fieldstation': '',
+            'year': ''}
+        try:
+            scenario_options['name'] = request.POST['scenario1-name']
+            scenario_options['year'] = request.POST['scenario1-year']
+            scenario_options['fieldstation'] = request.POST[
+                'scenario1-fieldstation']
+            scenario_options['leafarea'] = request.POST['scenario1-leafarea']
+            scenario_options['startdate'] = request.POST['scenario1-startdate']
+            scenario_options['enddate'] = request.POST['scenario1-enddate']
+            scenario_options['deltat'] = request.POST['scenario1-delta-t']
+        except:
+            pass
+    
+        specieslist = []
+        try:
+            specieslist = request.POST['scenario1-species'].split(",")
+        except:
+            pass
+    
+        myspecies = []
+        for s in specieslist:
+            if(s != ""):
+                species = {}
+                species['name'] = request.POST[s + '-name']
+                species['basetemp'] = request.POST[s + '-base-temp']
+                species['E0'] = request.POST[s + '-E0']
+                species['R0'] = request.POST[s + '-R0']
+                species['percent'] = request.POST[s + '-percent']
+                myspecies.append(species)
+    
+        return render_to_response(
+            'respiration/leaf.html', {'numspecies': len(myspecies),
+                                      'specieslist': myspecies,
+                                      'scenario_options': scenario_options})
 
 
 def forest(request):
