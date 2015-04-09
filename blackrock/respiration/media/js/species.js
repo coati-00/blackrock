@@ -44,8 +44,6 @@ Blackrock.Views.Species = Backbone.View.extend({
 
     showSpecies: function(event) {
         var this_list = jQuery(this.el).find('.species-predefined-list').show();
-        //event.currentTarget.attributes['data-id'].value;
-        /* Shouldn't be relying on a global variable here... should be passing in or something */
     },
     
     selectSpecies: function(event) {
@@ -55,37 +53,21 @@ Blackrock.Views.Species = Backbone.View.extend({
         this.model.set({'id': cpy_tree.get('id'), 'label' : cpy_tree.get('label'),
                         't0' : cpy_tree.get('t0'), 'k' :  cpy_tree.get('k'),
                         'r0' : cpy_tree.get('r0'), 'e0' : cpy_tree.get('e0')});
-        //var this_values = jQuery(this.el).find('.species-predefined-list').show();
     }
 
 });
 
-Blackrock.Views.LeafGraphManagementView = Backbone.View.extend({
-      events: {
-        //'click .scenario-row .deleteScenario': 'remove',
-        /* Do we want to leave functionality as is? Where it adds a row and then user selects species or what? */
-        'click .addLeafSpecies' : 'addSpeciesRow'
-      },
+Blackrock.Views.SpeciesListView = Backbone.View.extend({
 
-        initialize: function(options){
-            _.bindAll(this, 'renderCollection');
-        //_.bindAll(this, 'render', 'insert', 'remove');
-        this.template = _.template(jQuery("#leaf-left-bb-pane-template").html());
-        this.collection_container = $el.jQuery(".leafspeciescontainer");
+    initialize: function (options)
+    {
+        _.bindAll(this, 'renderCollection', 'addItem');
+        this.collection = new Blackrock.Collections.SpeciesCollection(options);
+        this.collection.on('reset', this.renderCollection);
+        this.collection.on('add', this.addItem);
         this.item_view = Blackrock.Views.Species;
-        this.collection = new Blackrock.Collections.SpeciesCollection();
-        // if (options && 'container' in options) {
-        //     this.container = options.container;
-        //     this.insert();
-        // }
-        //this.listenTo(this.model, 'change', this.render);
     },
-    // global.addSpecies = addSpecies;
-    // global.delSpecies = delSpecies;
-    // global.getNumSpecies = getNumSpecies;
-    // global.incNumSpecies = incNumSpecies;
-    // global.getSpeciesList = getSpeciesList;
-    // global.setSpeciesList = setSpeciesList;
+
     renderCollection: function() {
         this.collection.each(function(model)
         {
@@ -94,11 +76,61 @@ Blackrock.Views.LeafGraphManagementView = Backbone.View.extend({
             }).render().el);
         }, this);
         return this;
+    },
+    
+    addItem: function(model, collection, options)
+    {
+        this.$el.append(new this.item_view({
+            model: model
+        }).render().el);
+    }
+
+});
+
+
+
+Blackrock.Views.LeafGraphManagementView = Backbone.View.extend({
+      events: {
+        //'click .scenario-row .deleteScenario': 'remove',
+        /* Do we want to leave functionality as is? Where it adds a row and then user selects species or what? */
+        //'click .addLeafSpecies' : 'addSpeciesRow'
+      },
+
+        initialize: function(options){
+         //   _.bindAll(this, 'renderCollection', 'render');
+        //_.bindAll(this, 'render', 'insert', 'remove');
+        this.template = _.template(jQuery("#leaf-left-bb-pane-template").html());
+        this.collection_container = new Blackrock.Views.SpeciesListView({el: jQuery(".speciesbox .leafspeciescontainer")});
+        //this.collection_container = new Blackrock.Views.SpeciesListView({el: jQuery(".leafspeciescontainer")});
+        //this.collection_container = new Blackrock.Views.SpeciesListView({$el: this.template.find(".leafspeciescontainer")});
+        //this.collection_container = jQuery(this.el).find(".leafspeciescontainer");
+        //this.item_view = Blackrock.Views.Species;
+        //this.collection = new Blackrock.Collections.SpeciesCollection();
+        // if (options && 'container' in options) {
+        //     this.container = options.container;
+        //     this.insert();
+        // }
+        //this.listenTo(this.model, 'change', this.render);
     }//,
+    
+    // renderCollection: function() {
+    //     this.collection.each(function(model)
+    //     {
+    //         this.collection_container.append(new this.item_view({
+    //             model: model
+    //         }).render().el);
+    // //     }, this);
+    // //     return this;
+    // // },
+
+    // render: function () {
+    //     this.$el.append(this.template);
+    //     return this;
+    // },
     
     // addItem: function(model, collection, options)
     // {
-    //     this.$el.append(new this.item_view({
+    //     this.collection_container.append(new this.item_view({
     //         model: model
     //     }).render().el);
     // }
@@ -227,7 +259,11 @@ jQuery(function(){
         'e0' : 43140
     });
 
-    Blackrock.TestSpeciesView = new Blackrock.Views.Species({ model: Blackrock.TestSpecies, el: jQuery('#left-pane')}).render();
+    //Blackrock.TestSpeciesView = new Blackrock.Views.Species({ model: Blackrock.TestSpecies, el: jQuery('#left-pane')}).render();
+    //console.log(Blackrock.TestSpeciesView);
+
+    Blackrock.TestSpeciesView = new Blackrock.Views.LeafGraphManagementView({ el: jQuery('#left-pane')}).render();
+    console.log("Blackrock.TestSpeciesView");
     console.log(Blackrock.TestSpeciesView);
 //  //App.TestScenarioView = new App.Views.Scenario();
 //  
