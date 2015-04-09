@@ -14,68 +14,6 @@
     Set Respiration Rate Variables
   </h3>
 </script>
-<script type="text/template" id="leaf-species-row-template">
-     <div class="scenario-species-row">
-     <div class="name_info">
-       
-       <input type="text" size="30" 
-        name="<% if(label) { %> <%= label %><% } 
-        else {  %>Species Name Here...<%  } %>" value="<% if(label) { %> <%= label %><% } else {  %>Species Name Here...<%  } %>" />
-       <div class="btn-group">
-	           <button type="button" class="btn btn-success btn-xs pull-right dropdown-toggle addSpecies" data-toggle="dropdown" aria-expanded="false">
-	             Select Species<span class="caret"></span>
-	           </button>
-	           <ul class="dropdown-menu" role="menu">
-        	     <li class="species-predefined-choice" data-id="acer_rubrum" name="Acer rubrum"><a href="#">Acer rubrum</a></li>
-                 <li class="species-predefined-choice" data-id="berberis_thumbergii" name="Berberis thumbergii"><a href="#">Berberis thumbergii</a></li>
-                 <li class="species-predefined-choice" data-id="betula_lenta" name="Betula lenta"><a href="#">Betula lenta</a></li>
-                 <li class="species-predefined-choice" data-id="betula_papyrifera" name="Betula papyrifera"><a href="#">Betula papyrifera</a></li>
-                 <li class="species-predefined-choice" data-id="carya_glabra" name="Carya glabra"><a href="#">Carya glabra</a></li>
-                 <li class="species-predefined-choice" data-id="kalmia_latifolia" name="Kalmia latifolia"><a href="#">Kalmia latifolia</a></li>
-                 <li class="species-predefined-choice" data-id="liriodendron_tulipifera" name="Liriodendron tulipifera"><a href="#">Liriodendron tulipifera</a></li>
-                 <li class="species-predefined-choice" data-id="platanus_occidentalis" name="Platanus occidentalis"><a href="#">Platanus occidentalis</a></li>
-                 <li class="species-predefined-choice" data-id="populus_tremuloides" name="Populus tremuloides"><a href="#">Populus tremuloides</a></li>
-                 <li class="species-predefined-choice" data-id="populus_grandidentata" name="Populus grandidentata"><a href="#">Populus grandidentata</a></li>
-                 <li class="species-predefined-choice" data-id="quercus_prinus" name="Quercus prinus"><a href="#">Quercus prinus</a></li>
-	             <li class="species-predefined-choice" data-id="quercus_rubra" name="Quercus rubra"><a href="#">Quercus rubra</a></li>
-	             <li class="species-predefined-choice" data-id="vaccinium_corymbosum" name="Vaccinium corymbosum"><a href="#">Vaccinium corymbosum</a></li>
-	           </ul>
-      </div>
-    </div>
-     <tr>
-	   <td>Base Temperature:</td><td>T <sub> 0 </sub>  = 
-	     <input type="text" size="5" id="-base-temp" name="-base-temp" class="base-temp"
-	     value="<% if(t0) { %> <%= t0 %><% } 
-         else {  %> <%  } %>"  />
-		 &deg;C = <span id="kelvin"> 273.15 </span>  K 
-         &deg;C = <span id="kelvin_k"> <% if(k) { %> <%= k %><% } else {  %> <%  } %> </span>  K
-          
-       </td>
-     </tr>
-     <tr>
-       <td>
-         Respiration Rate<br/>	    @ base temperature
-       </td>
-       <td>
-		 R<sub>0 </sub>= <input type="text" size="5" id="-R0" name="-R0" class="r-zero arr-field" 
-        value="<% if(r0) { %> <%= r0 %><% } 
-        else {  %> <%  } %>" />
-		 umol&nbsp;m<sup>-2</sup>s<sup>-1</sup>
-	   </td>
-	 </tr>
-	 <tr>
-	   <td>
-	     Energy of Activation <br />@ base temperature
-       </td>
-	   <td>
-	     E<sub>0 </sub>	= <input type="text" size="5" id="-E0" name="-E0" class="e-zero arr-field"
-        value="<% if(e0) { %> <%= e0 %><% } 
-        else {  %> <%  } %>" />
-		 J mol<sup>-1</sup>
-	   </td>
-	 </tr>
-     </div>
-</script>
 
 
 <script type="text/template" id="leaf-left-pane-template">
@@ -168,7 +106,7 @@
  </script>
 
 
-<script type="text/template" id="leaf-right-legend-template">
+<script type="text/template" id="leaf-right-pane-template">
      <div id="y-grid-leaf"></div>
      <div id="temperature_adjustment">
        <div id="temp_label">

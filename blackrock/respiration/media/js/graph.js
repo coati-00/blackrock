@@ -6,8 +6,6 @@ function LeafGraphData() {
     this.colors = ['#ff1f81', '#a21764', '#8ab438', '#999999', '#3a5b87', '#00c0c7', '#c070f0', '#ff8000', '#00ff00'];
 }
 
-
-
 var LeafData = new LeafGraphData();
 
 LeafGraphData.prototype.updateSpecies = function(species_id) {
@@ -29,7 +27,7 @@ LeafGraphData.prototype.updateSpecies = function(species_id) {
     //works as advertised
 };
 
-function updateLeafColors() {
+function updateColors() {
   forEach(getElementsByTagAndClassName('div', 'species'), function(species) {
     LeafData.updateSpecies(species.id);
   });

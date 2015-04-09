@@ -6,7 +6,7 @@
 
    function initScenarioCloner() {
       html = $('scenario1').innerHTML;
-      updateForestColors();
+      updateColors();
    }
 
    function addScenario() {

@@ -6,6 +6,60 @@ function ForestGraphData() {
 
 var ForestData = new ForestGraphData();
 
+function showError() { setStyle("error", {'display':'block'}); }
+
+function clearError() { setStyle("error", {'display':'none'}); }
+
+function errorHighlight(elem) {
+  addElementClass(elem, "errorHighlight");
+  connect(elem, "onfocus", clearHighlight);
+  showError();
+}
+
+function clearHighlight(e) {
+  removeElementClass(e.src(), "errorHighlight");
+}
+
+function isLeapYear(year) {
+  if(year % 4 == 0) {
+    if(year % 100 == 0) {
+      if(year % 400 == 0) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  }
+  return false;
+}
+
+function isValidMMDD(str, leapyear) {
+  var bits = str.split(/[/,-]/);
+  if(bits.length != 2) { return false; }
+  var month = bits[0];
+  var day = bits[1];
+  if(month == "" || day == "") {
+    return false;
+  }
+  if(isNaN(month) || isNaN(day)) {
+    return false;
+  }
+  if(month < 1 || month > 12) {
+    return false;
+  }
+  var maxday = 31;
+  if(month in {4:'', 6:'', 9:'', 11:''}) {
+     maxday = 30;
+  }
+  if(month == 2) {
+    maxday = 28;   // need to check for leapyears
+    if(leapyear) { maxday = 29; }
+  }
+  if(day < 0 || day > maxday) {
+    return false;
+  }
+  return true;
+}
 
 ForestGraphData.prototype.updateScenario = function(scenario_id) {
     var obj = this;
@@ -104,7 +158,7 @@ ForestGraphData.prototype.updateSpecies = function(species_id) {
 }
 
 // overrides function in graph.js
-function initForestGraph() {
+function initGraph() {
   clearError();
   var g = new Bluff.Bar('graph', "460x345");
   g.set_theme({
@@ -123,7 +177,7 @@ function initForestGraph() {
   return g;
 }
 
-function updateForestColors() {
+function updateColors() {
   clearError();
   forEach(getElementsByTagAndClassName('div', 'scenario'), function(scenario) {
     ForestData.updateScenario(scenario.id);
@@ -214,6 +268,6 @@ function forestGraph() {
 
 
 // overrides function in graph.js
-//LeafGraphData.prototype.updateFields = function() {
-//    return;
-//};
+LeafGraphData.prototype.updateFields = function() {
+    return;
+};

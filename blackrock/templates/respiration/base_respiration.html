@@ -32,21 +32,22 @@
     <script type="text/javascript" src="/site_media/js/respiration/tabswitch.js"></script>
     <script type="text/javascript" src="/site_media/js/mochikit/MochiKit/DragAndDrop.js"></script>
     <script type="text/javascript" src="media/js/species.js"></script>
-    <script type="text/javascript" src="media/js/scenario.js"></script>
-    <script type="text/javascript" src="media/js/foresthelpers.js"></script>
-    <script type="text/javascript" src="media/js/forestgraph.js"></script>
+    <script type="text/javascript" src="media/js/graph.js"></script>
+    <!--<script type="text/javascript" src="media/js/scenario.js"></script> -->
+    <!--<script type="text/javascript" src="media/js/foresthelpers.js"></script> -->
+    <!--<script type="text/javascript" src="media/js/forestgraph.js"></script> -->
 
 
    <script type="text/javascript">
-   // function closePredefinedSpecies() {
-   //     var elts = getElementsByTagAndClassName("div", "species-predefined-list");
-   //     forEach(elts, function(elt) {
-   //         if (getStyle(elt, 'display') === 'block') {
-   //             hideElement(elt);
-   //         }
-   //     });
-   //    }
-     //connect(document.body, "onclick", closePredefinedSpecies); 
+   function closePredefinedSpecies() {
+       var elts = getElementsByTagAndClassName("div", "species-predefined-list");
+       forEach(elts, function(elt) {
+           if (getStyle(elt, 'display') === 'block') {
+               hideElement(elt);
+           }
+       });
+      }
+    // connect(document.body, "onclick", closePredefinedSpecies); 
      //on("mouseover", "div.species-select-predefined", function() {})
      //jQuery(document.body).on("mouseout", "div.species-predefined-choice", 
     	//	 function() {closePredefinedSpecies();});
@@ -100,26 +101,7 @@
         }
     }
 
-//     addLoadEvent(function() {
-// //         {% for station in stations %}
-// //             addYears("{{station}}", {{years|hash:station}});
-// //         {% endfor %}
-//         //initNav(); // foresthelpers.js
-//         //initYearHelper(); // foresthelpers.js
-//         initSpeciesModule(); // species.js
-//         initScenarioModule(); // scenario.js
-//         setup(); // graph.js        
-//       });
-
-//     makeExportLink = function(a) {
-//       var id = a.id;
-//       id = id.split('-')[0];
-//       var year = document.getElementById(id+'-year').value;
-//       var start = document.getElementById(id+'-startdate').value;
-//       var end = document.getElementById(id+'-enddate').value;
-//       var station = document.getElementById(id+'-fieldstation').value;
-//       a.href = "/respiration/getcsv?year="+year+"&start="+start+"&end="+end+"&station="+station;
-//     };    
+ 
   </script>
 {% endblock %} 
 
