@@ -1,3 +1,245 @@
+var Blackrock = { 
+    Models: {}, 
+    Collections: {}, 
+    Views:{}
+}
+
+Blackrock.Models.Species = Backbone.Model.extend({});
+
+Blackrock.Collections.SpeciesCollection = Backbone.Collection.extend({
+    model: Blackrock.Models.Species,
+});
+
+Blackrock.Views.Species = Backbone.View.extend({
+
+    events: {
+        'click .delete': 'remove',
+        'click .species-select-predefined': 'showSpecies',
+        'click .species-predefined-choice': 'selectSpecies'
+        //'click .scenario-species-row .name_info .dropdown-menu .species-predefined-choice': 'selectSpecies'
+      },
+    
+    initialize: function(options){
+        _.bindAll(this, 'render', 'insert', 'remove');
+        this.template = _.template(jQuery("#leaf-species-template").html());
+        if (options && 'container' in options) {
+            this.container = options.container;
+            this.insert();
+        }
+        this.listenTo(this.model, 'change', this.render);
+    },
+
+    render: function () {
+        this.$el.html(this.template(this.model.attributes));
+        return this;
+    },
+
+    insert: function(){
+        this.container.append(this.$el);
+    },
+    
+    remove: function() {
+        this.model.destroy();
+    },
+
+    showSpecies: function(event) {
+        var this_list = jQuery(this.el).find('.species-predefined-list').show();
+        //event.currentTarget.attributes['data-id'].value;
+        /* Shouldn't be relying on a global variable here... should be passing in or something */
+    },
+    
+    selectSpecies: function(event) {
+        var tree_id = event.currentTarget.attributes['data-id'].value;
+        /* Shouldn't be relying on a global variable here... should be passing in or something */
+        var cpy_tree = Blackrock.PredefinedSpecies.get(tree_id).clone();
+        this.model.set({'id': cpy_tree.get('id'), 'label' : cpy_tree.get('label'),
+                        't0' : cpy_tree.get('t0'), 'k' :  cpy_tree.get('k'),
+                        'r0' : cpy_tree.get('r0'), 'e0' : cpy_tree.get('e0')});
+        //var this_values = jQuery(this.el).find('.species-predefined-list').show();
+    }
+
+});
+
+Blackrock.Views.LeafGraphManagementView = Backbone.View.extend({
+      events: {
+        //'click .scenario-row .deleteScenario': 'remove',
+        /* Do we want to leave functionality as is? Where it adds a row and then user selects species or what? */
+        'click .addLeafSpecies' : 'addSpeciesRow'
+      },
+
+        initialize: function(options){
+            _.bindAll(this, 'renderCollection');
+        //_.bindAll(this, 'render', 'insert', 'remove');
+        this.template = _.template(jQuery("#leaf-left-bb-pane-template").html());
+        this.collection_container = $el.jQuery(".leafspeciescontainer");
+        this.item_view = Blackrock.Views.Species;
+        this.collection = new Blackrock.Collections.SpeciesCollection();
+        // if (options && 'container' in options) {
+        //     this.container = options.container;
+        //     this.insert();
+        // }
+        //this.listenTo(this.model, 'change', this.render);
+    },
+    // global.addSpecies = addSpecies;
+    // global.delSpecies = delSpecies;
+    // global.getNumSpecies = getNumSpecies;
+    // global.incNumSpecies = incNumSpecies;
+    // global.getSpeciesList = getSpeciesList;
+    // global.setSpeciesList = setSpeciesList;
+    renderCollection: function() {
+        this.collection.each(function(model)
+        {
+            this.$el.append(new this.item_view({
+                model: model
+            }).render().el);
+        }, this);
+        return this;
+    }//,
+    
+    // addItem: function(model, collection, options)
+    // {
+    //     this.$el.append(new this.item_view({
+    //         model: model
+    //     }).render().el);
+    // }
+});
+
+
+jQuery(function(){
+    
+    Blackrock.PredefinedSpecies = new Blackrock.Collections.SpeciesCollection();
+
+    /* Add some predefined species */
+    Blackrock.PredefinedSpecies.add([
+        new Blackrock.Models.Species({   
+            'id': "quercus_rubra",
+            'label' : 'Quercus rubra',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.602,
+            'e0' : 43140
+        }),
+        new Blackrock.Models.Species({   
+            'id': "quercus_prinus",
+            'label' : 'Quercus prinus',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.670,
+            'e0' : 37005
+        }),
+        new Blackrock.Models.Species({   
+            'id': "acer_rubrum",
+            'label' : 'Acer rubrum',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.680,
+            'e0' : 27210
+       }),
+       new Blackrock.Models.Species({   
+            'id': "vaccinium_corymbosum",
+            'label' : 'Vaccinium corymbosum',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.091,
+            'e0' : 62967
+       }),
+       new Blackrock.Models.Species({   
+            'id': "berberis_thumbergii",
+            'label' : 'Berberis thumbergii',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.203,
+            'e0' : 81950
+       }),
+       new Blackrock.Models.Species({   
+            'id': "kalmia_latifolia",
+            'label' : 'Kalmia latifolia',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.308,
+            'e0' : 54940
+        }),
+        new Blackrock.Models.Species({   
+            'id': "carya_glabra",
+            'label' : 'Carya glabra',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.134,
+            'e0' : 70547.5
+        }),
+        new Blackrock.Models.Species({   
+            'id': "liriodendron_tulipifera",
+            'label' : 'Liriodendron tulipifera',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.187,
+            'e0' : 60620.0
+        }),
+        new Blackrock.Models.Species({   
+            'id': "platanus_occidentalis",
+            'label' : 'Platanus occidentalis',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.320,
+            'e0' : 56336.7
+        }),
+        new Blackrock.Models.Species({   
+            'id': "betula_papyrifera",
+            'label' : 'Betula papyrifera',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.357,
+            'e0' : 45322.0
+        }),
+        new Blackrock.Models.Species({   
+            'id': "populus_tremuloides",
+            'label' : 'Populus tremuloides',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.424,
+            'e0' : 52261.3
+        }),
+        new Blackrock.Models.Species({   
+            'id': "populus_grandidentata",
+            'label' : 'Populus grandidentata',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.294,
+            'e0' : 59425.5
+        }),
+        new Blackrock.Models.Species({   
+            'id': "betula_lenta",
+            'label' : 'Betula lenta',
+            't0' : 10,
+            'k' :  283.15,
+            'r0' : 0.162,
+            'e0' : 54267.7
+        })
+    ]);
+    
+    
+    Blackrock.TestSpecies = new Blackrock.Models.Species({   
+        'id': "unique_id",
+        'label' : 'Quercus rubra',
+        't0' : 10,
+        'k' :  283.15,
+        'r0' : 0.602,
+        'e0' : 43140
+    });
+
+    Blackrock.TestSpeciesView = new Blackrock.Views.Species({ model: Blackrock.TestSpecies, el: jQuery('#left-pane')}).render();
+    console.log(Blackrock.TestSpeciesView);
+//  //App.TestScenarioView = new App.Views.Scenario();
+//  
+//  App.TestScenario = new App.Models.Scenario({});
+//
+//    App.TestScenarioView = new App.Views.Scenario({ model: App.TestScenario, el: jQuery('.scenario-view-test')}).render();
+    
+    
+});
+
+
+
 /* module wrapper pattern*/
 (function() {
 

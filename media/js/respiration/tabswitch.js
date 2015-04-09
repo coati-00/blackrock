@@ -42,7 +42,7 @@
     	  
     	  //replace the current content with the leaf content
     	  jQuery('#left-legend').html(jQuery('#leaf-left-legend-template').html());
-    	  jQuery('#left-pane').html(jQuery('#leaf-left-pane-template').html());
+    	  jQuery('#left-pane').html(jQuery('#leaf-left-bb-pane-template').html());
     	  jQuery('#right-legend').html(jQuery('#leaf-right-legend-template').html());
     	  jQuery('#right-pane').html(jQuery('#leaf-right-pane-template').html());
       }
